@@ -1,0 +1,95 @@
+/**
+ * Reusable Patterns
+ *
+ * Common CSS patterns that components can compose from.
+ * Prefixed with : to indicate they're for composition, not direct HTML use.
+ */
+
+@layer utilities {
+  /* Focus ring pattern */
+  .\:focus-ring:focus-visible {
+    outline: var(--focus-ring-width) solid var(--focus-ring-color);
+    outline-offset: var(--focus-ring-offset);
+  }
+
+  /* Interactive overlay effects */
+  .\:hover-overlay {
+    position: relative;
+
+    &::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-color: var(--color-hover-overlay);
+      opacity: 0;
+      transition: opacity var(--transition-fast) var(--transition-timing);
+      pointer-events: none;
+      border-radius: inherit;
+    }
+
+    &:hover::before {
+      opacity: 1;
+    }
+
+    &:active::before {
+      background-color: var(--color-active-overlay);
+    }
+  }
+
+  /* Card/surface elevation */
+  .\:surface {
+    background-color: var(--color-surface);
+    border: var(--border-width) solid var(--color-border);
+    border-radius: var(--radius-lg);
+  }
+
+  .\:surface-raised {
+    background-color: var(--color-surface);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+  }
+
+  /* Interactive state */
+  .\:interactive {
+    cursor: pointer;
+    transition:
+      background-color var(--transition-fast) var(--transition-timing),
+      border-color var(--transition-fast) var(--transition-timing),
+      color var(--transition-fast) var(--transition-timing);
+
+    &:hover {
+      background-color: var(--color-surface-secondary);
+    }
+
+    &:active {
+      background-color: var(--color-surface-tertiary);
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+  }
+
+  /* Truncate text */
+  .\:truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .\:truncate-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .\:truncate-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}

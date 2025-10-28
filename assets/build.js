@@ -1,7 +1,10 @@
 import * as esbuild from "esbuild";
+// what is transform used for?
 import { transform, bundleAsync } from "lightningcss";
 import { fileURLToPath } from "url";
 import { dirname, resolve } from "path";
+
+// what is readFileSync used for?
 import { readFileSync, writeFileSync, watch as fsWatch } from "fs";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -46,7 +49,7 @@ const config = {
   logLevel: "info",
   loader,
   plugins,
-  sourcemap: deploy ? false : (watch ? "inline" : "external"),
+  sourcemap: deploy ? false : watch ? "inline" : "external",
   minify: deploy,
   define: {
     "process.env.NODE_ENV": deploy ? '"production"' : '"development"',
@@ -99,7 +102,7 @@ if (watch) {
       if (filename?.endsWith(".css")) {
         buildCSS();
       }
-    }
+    },
   );
 
   // Watch JS files
@@ -108,8 +111,5 @@ if (watch) {
   console.log("Watching for changes...");
 } else {
   // Build both for production
-  await Promise.all([
-    esbuild.build(config),
-    buildCSS(),
-  ]);
+  await Promise.all([esbuild.build(config), buildCSS()]);
 }

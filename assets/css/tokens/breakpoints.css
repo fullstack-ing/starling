@@ -1,0 +1,31 @@
+/**
+ * Breakpoints
+ *
+ * Media query breakpoints for responsive design.
+ * Also includes container query breakpoints.
+ */
+
+@layer tokens {
+  :root {
+    /* Media query breakpoints */
+    --breakpoint-sm: 640px;
+    --breakpoint-md: 768px;
+    --breakpoint-lg: 1024px;
+    --breakpoint-xl: 1280px;
+    --breakpoint-2xl: 1536px;
+  }
+}
+
+/**
+ * Container Query Sizes
+ *
+ * Define named container sizes for use with @container queries.
+ * Lightning CSS supports container queries with proper browser targets.
+ *
+ * Usage in components:
+ *   container-type: inline-size;
+ *   container-name: card;
+ *
+ * Then query with:
+ *   @container card (min-width: 400px) { ... }
+ */

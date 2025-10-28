@@ -1,0 +1,95 @@
+/**
+ * Color Tokens
+ *
+ * Design system colors using CSS custom properties.
+ * Uses modern color-mix() for transparency and variations.
+ */
+
+@layer tokens {
+    :root {
+        /* Gray scale */
+        --color-gray-50: #f9fafb;
+        --color-gray-100: #f3f4f6;
+        --color-gray-200: #e5e7eb;
+        --color-gray-300: #d1d5db;
+        --color-gray-400: #9ca3af;
+        --color-gray-500: #6b7280;
+        --color-gray-600: #4b5563;
+        --color-gray-700: #374151;
+        --color-gray-800: #1f2937;
+        --color-gray-900: #111827;
+
+        /* Primary brand color */
+        --color-primary-50: #eff6ff;
+        --color-primary-100: #dbeafe;
+        --color-primary-200: #bfdbfe;
+        --color-primary-500: #0066cc;
+        --color-primary-600: #0052a3;
+        --color-primary-700: #004080;
+
+        /* Semantic colors */
+        --color-success: #10b981;
+        --color-success-light: #d1fae5;
+        --color-warning: #f59e0b;
+        --color-warning-light: #fef3c7;
+        --color-error: #dc2626;
+        --color-error-light: #fef2f2;
+        --color-info: #0066cc;
+        --color-info-light: #eff6ff;
+
+        /* Surface colors */
+        --color-surface: #ffffff;
+        --color-surface-secondary: var(--color-gray-50);
+        --color-surface-tertiary: var(--color-gray-100);
+
+        /* Text colors */
+        --color-text-primary: var(--color-gray-900);
+        --color-text-secondary: var(--color-gray-700);
+        --color-text-tertiary: var(--color-gray-500);
+        --color-text-inverse: #ffffff;
+
+        /* Border colors */
+        --color-border: var(--color-gray-200);
+        --color-border-strong: var(--color-gray-300);
+
+        /* Interactive states */
+        --color-focus: var(--color-primary-500);
+        --color-hover-overlay: color-mix(
+            in srgb,
+            var(--color-gray-900) 5%,
+            transparent
+        );
+        --color-active-overlay: color-mix(
+            in srgb,
+            var(--color-gray-900) 10%,
+            transparent
+        );
+    }
+
+    /* Dark theme (optional) */
+    @media (prefers-color-scheme: dark) {
+        :root {
+            --color-surface: var(--color-gray-900);
+            --color-surface-secondary: var(--color-gray-800);
+            --color-surface-tertiary: var(--color-gray-700);
+
+            --color-text-primary: var(--color-gray-50);
+            --color-text-secondary: var(--color-gray-300);
+            --color-text-tertiary: var(--color-gray-400);
+
+            --color-border: var(--color-gray-700);
+            --color-border-strong: var(--color-gray-600);
+
+            --color-hover-overlay: color-mix(
+                in srgb,
+                var(--color-gray-50) 5%,
+                transparent
+            );
+            --color-active-overlay: color-mix(
+                in srgb,
+                var(--color-gray-50) 10%,
+                transparent
+            );
+        }
+    }
+}

@@ -8,22 +8,17 @@ defmodule StarlingWeb.CoreComponents do
   with doc strings and declarative assigns. You may customize and style
   them in any way you want, based on your application growth and needs.
 
-  The foundation for styling is Tailwind CSS, a utility-first CSS framework,
-  augmented with daisyUI, a Tailwind CSS plugin that provides UI components
-  and themes. Here are useful references:
+  Components are styled with vanilla CSS and semantic class names. Component
+  styles are located in `assets/css/components/`.
 
-    * [daisyUI](https://daisyui.com/docs/intro/) - a good place to get
-      started and see the available components.
-
-    * [Tailwind CSS](https://tailwindcss.com) - the foundational framework
-      we build on. You will use it for layout, sizing, flexbox, grid, and
-      spacing.
-
-    * [Heroicons](https://heroicons.com) - see `icon/1` for usage.
+  Useful references:
 
     * [Phoenix.Component](https://hexdocs.pm/phoenix_live_view/Phoenix.Component.html) -
       the component system used by Phoenix. Some components, such as `<.link>`
       and `<.form>`, are defined there.
+
+    * [MDN Web Docs](https://developer.mozilla.org/) - comprehensive web
+      platform documentation for HTML, CSS, and JavaScript.
 
   """
   use Phoenix.Component
@@ -31,53 +26,8 @@ defmodule StarlingWeb.CoreComponents do
 
   alias Phoenix.LiveView.JS
 
-  @doc """
-  Renders flash notices.
-
-  ## Examples
-
-      <.flash kind={:info} flash={@flash} />
-      <.flash kind={:info} phx-mounted={show("#flash")}>Welcome Back!</.flash>
-  """
-  attr :id, :string, doc: "the optional id of flash container"
-  attr :flash, :map, default: %{}, doc: "the map of flash messages to display"
-  attr :title, :string, default: nil
-  attr :kind, :atom, values: [:info, :error], doc: "used for styling and flash lookup"
-  attr :rest, :global, doc: "the arbitrary HTML attributes to add to the flash container"
-
-  slot :inner_block, doc: "the optional inner block that renders the flash message"
-
-  def flash(assigns) do
-    assigns = assign_new(assigns, :id, fn -> "flash-#{assigns.kind}" end)
-
-    ~H"""
-    <div
-      :if={msg = render_slot(@inner_block) || Phoenix.Flash.get(@flash, @kind)}
-      id={@id}
-      phx-click={JS.push("lv:clear-flash", value: %{key: @kind}) |> hide("##{@id}")}
-      role="alert"
-      class="toast toast-top toast-end z-50"
-      {@rest}
-    >
-      <div class={[
-        "alert w-80 sm:w-96 max-w-80 sm:max-w-96 text-wrap",
-        @kind == :info && "alert-info",
-        @kind == :error && "alert-error"
-      ]}>
-        <.icon :if={@kind == :info} name="hero-information-circle" class="size-5 shrink-0" />
-        <.icon :if={@kind == :error} name="hero-exclamation-circle" class="size-5 shrink-0" />
-        <div>
-          <p :if={@title} class="font-semibold">{@title}</p>
-          <p>{msg}</p>
-        </div>
-        <div class="flex-1" />
-        <button type="button" class="group self-start cursor-pointer" aria-label={gettext("close")}>
-          <.icon name="hero-x-mark" class="size-5 opacity-40 group-hover:opacity-70" />
-        </button>
-      </div>
-    </div>
-    """
-  end
+  # Delegate web components from separate modules
+  defdelegate flash(assigns), to: StarlingWeb.FlashComponent
 
   @doc """
   Renders a button with navigation support.
@@ -94,11 +44,11 @@ defmodule StarlingWeb.CoreComponents do
   slot :inner_block, required: true
 
   def button(%{rest: rest} = assigns) do
-    variants = %{"primary" => "btn-primary", nil => "btn-primary btn-soft"}
+    variants = %{"primary" => "button-primary", nil => "button-secondary"}
 
     assigns =
       assign_new(assigns, :class, fn ->
-        ["btn", Map.fetch!(variants, assigns[:variant])]
+        ["button", Map.fetch!(variants, assigns[:variant])]
       end)
 
     if rest[:href] || rest[:navigate] || rest[:patch] do
@@ -185,20 +135,19 @@ defmodule StarlingWeb.CoreComponents do
       end)
 
     ~H"""
-    <div class="fieldset mb-2">
-      <label>
+    <div class="form-field">
+      <label class="checkbox-label">
         <input type="hidden" name={@name} value="false" disabled={@rest[:disabled]} />
-        <span class="label">
-          <input
-            type="checkbox"
-            id={@id}
-            name={@name}
-            value="true"
-            checked={@checked}
-            class={@class || "checkbox checkbox-sm"}
-            {@rest}
-          />{@label}
-        </span>
+        <input
+          type="checkbox"
+          id={@id}
+          name={@name}
+          value="true"
+          checked={@checked}
+          class={@class || "form-checkbox"}
+          {@rest}
+        />
+        <span class="checkbox-label-text">{@label}</span>
       </label>
       <.error :for={msg <- @errors}>{msg}</.error>
     </div>
@@ -207,13 +156,13 @@ defmodule StarlingWeb.CoreComponents do
 
   def input(%{type: "select"} = assigns) do
     ~H"""
-    <div class="fieldset mb-2">
+    <div class="form-field">
       <label>
-        <span :if={@label} class="label mb-1">{@label}</span>
+        <span :if={@label} class="form-label">{@label}</span>
         <select
           id={@id}
           name={@name}
-          class={[@class || "w-full select", @errors != [] && (@error_class || "select-error")]}
+          class={[@class || "form-select", @errors != [] && (@error_class || "form-input-error")]}
           multiple={@multiple}
           {@rest}
         >
@@ -228,15 +177,15 @@ defmodule StarlingWeb.CoreComponents do
 
   def input(%{type: "textarea"} = assigns) do
     ~H"""
-    <div class="fieldset mb-2">
+    <div class="form-field">
       <label>
-        <span :if={@label} class="label mb-1">{@label}</span>
+        <span :if={@label} class="form-label">{@label}</span>
         <textarea
           id={@id}
           name={@name}
           class={[
-            @class || "w-full textarea",
-            @errors != [] && (@error_class || "textarea-error")
+            @class || "form-textarea",
+            @errors != [] && (@error_class || "form-input-error")
           ]}
           {@rest}
         >{Phoenix.HTML.Form.normalize_value("textarea", @value)}</textarea>
@@ -249,17 +198,17 @@ defmodule StarlingWeb.CoreComponents do
   # All other inputs text, datetime-local, url, password, etc. are handled here...
   def input(assigns) do
     ~H"""
-    <div class="fieldset mb-2">
+    <div class="form-field">
       <label>
-        <span :if={@label} class="label mb-1">{@label}</span>
+        <span :if={@label} class="form-label">{@label}</span>
         <input
           type={@type}
           name={@name}
           id={@id}
           value={Phoenix.HTML.Form.normalize_value(@type, @value)}
           class={[
-            @class || "w-full input",
-            @errors != [] && (@error_class || "input-error")
+            @class || "form-input",
+            @errors != [] && (@error_class || "form-input-error")
           ]}
           {@rest}
         />
@@ -272,8 +221,8 @@ defmodule StarlingWeb.CoreComponents do
   # Helper used by inputs to generate form errors
   defp error(assigns) do
     ~H"""
-    <p class="mt-1.5 flex gap-2 items-center text-sm text-error">
-      <.icon name="hero-exclamation-circle" class="size-5" />
+    <p class="form-error">
+      <span aria-hidden="true">⚠</span>
       {render_slot(@inner_block)}
     </p>
     """
@@ -288,16 +237,16 @@ defmodule StarlingWeb.CoreComponents do
 
   def header(assigns) do
     ~H"""
-    <header class={[@actions != [] && "flex items-center justify-between gap-6", "pb-4"]}>
-      <div>
-        <h1 class="text-lg font-semibold leading-8">
+    <header class={["page-header", @actions != [] && "page-header-with-actions"]}>
+      <div class="page-header-content">
+        <h1 class="page-title">
           {render_slot(@inner_block)}
         </h1>
-        <p :if={@subtitle != []} class="text-sm text-base-content/70">
+        <p :if={@subtitle != []} class="page-subtitle">
           {render_slot(@subtitle)}
         </p>
       </div>
-      <div class="flex-none">{render_slot(@actions)}</div>
+      <div class="page-header-actions">{render_slot(@actions)}</div>
     </header>
     """
   end
@@ -334,34 +283,36 @@ defmodule StarlingWeb.CoreComponents do
       end
 
     ~H"""
-    <table class="table table-zebra">
-      <thead>
-        <tr>
-          <th :for={col <- @col}>{col[:label]}</th>
-          <th :if={@action != []}>
-            <span class="sr-only">{gettext("Actions")}</span>
-          </th>
-        </tr>
-      </thead>
-      <tbody id={@id} phx-update={is_struct(@rows, Phoenix.LiveView.LiveStream) && "stream"}>
-        <tr :for={row <- @rows} id={@row_id && @row_id.(row)}>
-          <td
-            :for={col <- @col}
-            phx-click={@row_click && @row_click.(row)}
-            class={@row_click && "hover:cursor-pointer"}
-          >
-            {render_slot(col, @row_item.(row))}
-          </td>
-          <td :if={@action != []} class="w-0 font-semibold">
-            <div class="flex gap-4">
-              <%= for action <- @action do %>
-                {render_slot(action, @row_item.(row))}
-              <% end %>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="table-container">
+      <table class="data-table">
+        <thead class="table-header">
+          <tr>
+            <th :for={col <- @col}>{col[:label]}</th>
+            <th :if={@action != []}>
+              <span class="sr-only">{gettext("Actions")}</span>
+            </th>
+          </tr>
+        </thead>
+        <tbody id={@id} phx-update={is_struct(@rows, Phoenix.LiveView.LiveStream) && "stream"}>
+          <tr :for={row <- @rows} id={@row_id && @row_id.(row)}>
+            <td
+              :for={col <- @col}
+              phx-click={@row_click && @row_click.(row)}
+              class={@row_click && "table-cell-clickable"}
+            >
+              {render_slot(col, @row_item.(row))}
+            </td>
+            <td :if={@action != []} class="table-actions-cell">
+              <div class="table-actions">
+                <%= for action <- @action do %>
+                  {render_slot(action, @row_item.(row))}
+                <% end %>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
     """
   end
 
@@ -381,41 +332,35 @@ defmodule StarlingWeb.CoreComponents do
 
   def list(assigns) do
     ~H"""
-    <ul class="list">
-      <li :for={item <- @item} class="list-row">
-        <div class="list-col-grow">
-          <div class="font-bold">{item.title}</div>
-          <div>{render_slot(item)}</div>
-        </div>
-      </li>
-    </ul>
+    <dl class="data-list">
+      <div :for={item <- @item} class="data-list-item">
+        <dt class="data-list-title">{item.title}</dt>
+        <dd class="data-list-value">{render_slot(item)}</dd>
+      </div>
+    </dl>
     """
   end
 
   @doc """
-  Renders a [Heroicon](https://heroicons.com).
+  Renders an icon.
 
-  Heroicons come in three styles – outline, solid, and mini.
-  By default, the outline style is used, but solid and mini may
-  be applied by using the `-solid` and `-mini` suffix.
-
-  You can customize the size and colors of the icons by setting
-  width, height, and background color classes.
-
-  Icons are extracted from the `deps/heroicons` directory and bundled within
-  your compiled app.css by the plugin in `assets/vendor/heroicons.js`.
+  This is a placeholder component. Replace with your preferred icon system:
+  - SVG sprites
+  - Icon fonts
+  - Inline SVG components
+  - Web components
 
   ## Examples
 
-      <.icon name="hero-x-mark" />
-      <.icon name="hero-arrow-path" class="ml-1 size-3 motion-safe:animate-spin" />
+      <.icon name="x-mark" />
+      <.icon name="check" class="icon-lg" />
   """
   attr :name, :string, required: true
-  attr :class, :string, default: "size-4"
+  attr :class, :string, default: nil
 
-  def icon(%{name: "hero-" <> _} = assigns) do
+  def icon(assigns) do
     ~H"""
-    <span class={[@name, @class]} />
+    <span class={["icon", "icon-#{@name}", @class]} aria-hidden="true"></span>
     """
   end
 
@@ -425,10 +370,7 @@ defmodule StarlingWeb.CoreComponents do
     JS.show(js,
       to: selector,
       time: 300,
-      transition:
-        {"transition-all ease-out duration-300",
-         "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95",
-         "opacity-100 translate-y-0 sm:scale-100"}
+      transition: {"transition-show", "transition-show-from", "transition-show-to"}
     )
   end
 
@@ -436,9 +378,7 @@ defmodule StarlingWeb.CoreComponents do
     JS.hide(js,
       to: selector,
       time: 200,
-      transition:
-        {"transition-all ease-in duration-200", "opacity-100 translate-y-0 sm:scale-100",
-         "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"}
+      transition: {"transition-hide", "transition-hide-from", "transition-hide-to"}
     )
   end
 
