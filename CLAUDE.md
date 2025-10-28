@@ -41,9 +41,16 @@ mix test --failed                # Run previously failed tests
 
 ### Asset Pipeline
 ```bash
-mix assets.setup     # Install Tailwind and esbuild if missing
-mix assets.build     # Compile assets
-mix assets.deploy    # Minify and digest assets for production
+mix assets.setup     # Install npm dependencies in assets folder
+mix assets.build     # Build assets with source maps (development)
+mix assets.deploy    # Build minified assets without source maps + digest (production)
+
+# Or run directly in assets folder:
+cd assets
+npm install          # Install dependencies
+npm run build        # Build assets once (with external source maps)
+npm run watch        # Watch and rebuild on changes (inline source maps)
+npm run deploy       # Build minified production assets (no source maps)
 ```
 
 ### Pre-commit Quality Checks
@@ -73,32 +80,58 @@ mix precommit  # Compile with warnings-as-errors, unlock unused deps, format, an
 
 ### Frontend Architecture
 
-**Current State** (transitioning from defaults):
-- Tailwind CSS v4 with DaisyUI components (planned migration to vanilla CSS + web components)
-- ESBuild for JavaScript bundling
-- Phoenix LiveView with colocated hooks pattern
+**Current State**:
+- Native npm-based ESBuild for JavaScript bundling (no Mix wrapper)
+- Lightning CSS for vanilla CSS processing with autoprefixing
+- Phoenix LiveView disabled/commented out
 - TypeScript configuration present (assets/tsconfig.json)
+- Build process runs independently via Node.js
+- Tailwind/DaisyUI completely removed
 
-**Target State** (per AGENTS.md):
-- Web Components via SSR Declarative Shadow DOM
+**Architecture** (aligns with AGENTS.md target):
+- Web Components via SSR Declarative Shadow DOM (in progress)
 - Vanilla CSS with proper encapsulation
-- Separate asset pipelines: ESBuild for JS, Lightning CSS for styles
+- Separate asset pipelines: ESBuild for JS, Lightning CSS for styles ✓
 - Strategic use of Channels for real-time features (not LiveView by default)
 
 ### Asset Pipeline Configuration
 
-The project uses Tailwind CSS v4 import syntax in `assets/css/app.css`:
-```css
-@import "tailwindcss" source(none);
-@source "../css";
-@source "../js";
-@source "../../lib/starling_web";
-```
+**Build System**:
+- ESBuild for JavaScript bundling (native npm, no Mix wrapper)
+- Lightning CSS for CSS processing with autoprefixing and modern CSS support
+- Build script: `assets/build.js` - handles both JS and CSS compilation
+- Package manager: npm with `assets/package.json`
+- Outputs:
+  - JavaScript: `priv/static/assets/js/app.js`
+  - CSS: `priv/static/assets/css/app.css`
 
-Watchers run automatically in development:
-- ESBuild watches JavaScript files
-- Tailwind watches CSS files
-- Phoenix LiveReload watches templates and static assets
+**Development Workflow**:
+- Phoenix dev.exs watcher runs `npm run watch` automatically
+- Build script watches both JS and CSS files
+- ESBuild rebuilds on changes to `assets/js/**/*.js`
+- Lightning CSS rebuilds on changes to `assets/css/**/*.css`
+- Phoenix LiveReload monitors built assets via `phx-track-static` attributes
+- Changes to `priv/static/assets/` trigger browser reload
+
+**How Live Reload Works**:
+1. Edit source file in `assets/js/` or `assets/css/`
+2. Build script detects change and rebuilds (ESBuild for JS, Lightning CSS for CSS)
+3. Phoenix LiveReload detects change to built file (via `phx-track-static` in layout)
+4. Browser auto-reloads
+
+**CSS Architecture**:
+- Entry point: `assets/css/app.css`
+- Lightning CSS provides:
+  - Autoprefixing for browser compatibility
+  - CSS bundling with `@import` support
+  - Minification in production (`npm run deploy`)
+  - Modern CSS syntax support (nesting, color functions, etc.)
+  - Source maps in development (external `.css.map` files)
+
+**Source Maps**:
+- **Watch mode** (`npm run watch`): Inline source maps for JS, external for CSS
+- **Build mode** (`npm run build`): External source maps for both JS and CSS (`.js.map`, `.css.map`)
+- **Deploy mode** (`npm run deploy`): No source maps, minified output for production
 
 ### Database
 
@@ -119,7 +152,7 @@ Ecto is configured with:
 This project deliberately moves away from Phoenix's LiveView-first and Tailwind-heavy defaults. When adding features:
 
 1. **Question LiveView usage**: Consider if a traditional controller + JSON endpoint would suffice
-2. **Avoid Tailwind classes in new components**: Plan migration path to vanilla CSS and web components
+2. **Use vanilla CSS and web components**: Tailwind/DaisyUI have been removed from the build
 3. **Favor progressive enhancement**: Start with working HTML, enhance with JavaScript
 4. **Use Phoenix Channels strategically**: Only for true real-time features, not as default
 
@@ -129,19 +162,33 @@ Use the included `:req` library for all HTTP requests. Avoid `:httpoison`, `:tes
 
 ### Component Development
 
-Current components use Tailwind/DaisyUI (see `lib/starling_web/components/core_components.ex`). The goal is to convert these to:
-- Web components with Declarative Shadow DOM
-- Baseline CSS styles without framework dependencies
-- Server-side rendering capabilities maintained
+The project has transitioned away from Tailwind/DaisyUI. When building new components:
+- Use vanilla CSS for styling
+- Target web components with Declarative Shadow DOM (see AGENTS.md)
+- Maintain server-side rendering capabilities with Phoenix function components
+- Existing core_components.ex will need CSS migration from Tailwind classes
 
-Refer to AGENTS.md section "Component Strategy" for the conversion approach.
+Refer to AGENTS.md section "Component Strategy" for the complete approach.
 
-### Live Reload Integration
+### Build System & Live Reload
 
-When modifying the build system (future Lightning CSS integration), ensure Phoenix's live reload is informed of file changes. The current configuration watches:
-- Static assets: `priv/static/`
-- Gettext translations: `priv/gettext/`
-- Web modules: `lib/starling_web/` (controllers, live, components, router)
+**Asset Build**: npm-based build system (configured in `assets/build.js`)
+- ESBuild for JavaScript bundling
+- Lightning CSS for CSS processing ✓
+- Phoenix watcher in dev.exs runs `npm run watch` in assets folder
+- Single build script handles both JS and CSS compilation
+- Layouts use `phx-track-static` attributes for automatic browser reload
+
+**Adding New CSS Files**:
+- Create CSS files in `assets/css/`
+- Import them in `assets/css/app.css` with `@import "./path/to/file.css"`
+- Lightning CSS will bundle them automatically
+- Organized by component: `assets/css/components/buttons.css`, etc.
+
+**Phoenix LiveReload watches**:
+- Built static assets: `priv/static/assets/` (via phx-track-static)
+- Templates: `lib/starling_web/` (.ex, .heex files)
+- Translations: `priv/gettext/`
 
 ### Comprehensive Guidelines
 
@@ -156,6 +203,6 @@ Key highlights from AGENTS.md:
 - Elixir lists don't support index-based access syntax (`list[i]` is invalid)
 - Always use `to_form/2` for forms, never raw changesets in templates
 - Use LiveView streams for collections to avoid memory issues
-- Tailwind v4 uses new `@import` syntax (no tailwind.config.js)
-- Never use `@apply` in raw CSS
 - Router scopes include optional aliases - avoid duplicate prefixes
+- Never use `@apply` in CSS (general best practice)
+- HEEx templates use `{...}` for attribute interpolation, `<%= %>` for body content

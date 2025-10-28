@@ -25,8 +25,11 @@ config :starling, StarlingWeb.Endpoint,
   debug_errors: true,
   secret_key_base: "KA5++MDOnfYFcVPSE+vJoeRq3TQXMvRSOqqgaGz8mJ5RZ8TdLcAgpqn/JDYrlzgX",
   watchers: [
-    esbuild: {Esbuild, :install_and_run, [:starling, ~w(--sourcemap=inline --watch)]},
-    tailwind: {Tailwind, :install_and_run, [:starling, ~w(--watch)]}
+    npm: [
+      "run",
+      "watch",
+      cd: Path.expand("../assets", __DIR__)
+    ]
   ]
 
 # ## SSL Support
