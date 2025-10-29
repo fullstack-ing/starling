@@ -2,92 +2,87 @@
  * Button Components
  *
  * Styles for .button class used by the button component in core_components.ex.
- * This is NOT a web component - just semantic classes on native <button> and <a> elements.
  */
 
 @layer components {
-  /* Base button styles */
-  .button {
-    /* Layout */
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: var(--space-2);
-    padding: var(--space-2) var(--space-4);
+    .button {
+        /* Layout */
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: var(--space-2);
+        padding: var(--space-2) var(--space-4);
 
-    /* Typography */
-    font-family: var(--font-sans);
-    font-size: var(--font-size-sm);
-    font-weight: var(--font-weight-medium);
-    line-height: var(--line-height-tight);
-    text-decoration: none;
-    white-space: nowrap;
+        /* Typography */
+        font-family: var(--font-sans);
+        font-size: var(--font-size-sm);
+        font-weight: var(--font-weight-medium);
+        line-height: var(--line-height-tight);
+        text-decoration: none;
+        white-space: nowrap;
 
-    /* Visual */
-    border: 1px solid transparent;
-    border-radius: var(--radius-md);
-    cursor: pointer;
-    user-select: none;
+        /* Visual */
+        border: 1px solid transparent;
+        border-radius: var(--radius-md);
+        cursor: pointer;
+        user-select: none;
 
-    /* Transitions */
-    transition:
-      background-color var(--transition-fast),
-      border-color var(--transition-fast),
-      color var(--transition-fast),
-      box-shadow var(--transition-fast);
+        /* Transitions */
+        transition:
+            background-color var(--transition-fast),
+            border-color var(--transition-fast),
+            color var(--transition-fast),
+            box-shadow var(--transition-fast);
 
-    /* States */
-    &:focus-visible {
-      outline: var(--focus-ring-width) solid var(--focus-ring-color);
-      outline-offset: var(--focus-ring-offset);
+        /* States */
+        &:focus-visible {
+            outline: var(--focus-ring-width) solid var(--focus-ring-color);
+            outline-offset: var(--focus-ring-offset);
+        }
+
+        &:disabled,
+        &[disabled] {
+            opacity: 0.5;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
     }
 
-    &:disabled,
-    &[disabled] {
-      opacity: 0.5;
-      cursor: not-allowed;
-      pointer-events: none;
-    }
-  }
+    .button-primary {
+        background-color: var(--color-primary-500);
+        color: var(--color-white);
+        border-color: var(--color-primary-500);
 
-  /* Primary variant (brand/accent) */
-  .button-primary {
-    background-color: var(--color-primary-500);
-    color: var(--color-white);
-    border-color: var(--color-primary-500);
+        &:hover:not(:disabled) {
+            background-color: var(--color-primary-600);
+            border-color: var(--color-primary-600);
+        }
 
-    &:hover:not(:disabled) {
-      background-color: var(--color-primary-600);
-      border-color: var(--color-primary-600);
+        &:active:not(:disabled) {
+            background-color: var(--color-primary-700);
+            border-color: var(--color-primary-700);
+        }
     }
 
-    &:active:not(:disabled) {
-      background-color: var(--color-primary-700);
-      border-color: var(--color-primary-700);
-    }
-  }
+    .button-secondary {
+        background-color: var(--color-surface-secondary);
+        color: var(--color-text-primary);
+        border-color: var(--color-border-medium);
 
-  /* Secondary variant (default) */
-  .button-secondary {
-    background-color: var(--color-surface-secondary);
-    color: var(--color-text-primary);
-    border-color: var(--color-border-medium);
+        &:hover:not(:disabled) {
+            background-color: var(--color-surface-tertiary);
+            border-color: var(--color-border-strong);
+        }
 
-    &:hover:not(:disabled) {
-      background-color: var(--color-surface-tertiary);
-      border-color: var(--color-border-strong);
+        &:active:not(:disabled) {
+            background-color: var(--color-gray-200);
+            border-color: var(--color-border-strong);
+        }
     }
 
-    &:active:not(:disabled) {
-      background-color: var(--color-gray-200);
-      border-color: var(--color-border-strong);
+    @media (prefers-color-scheme: dark) {
+        .button-secondary:active:not(:disabled) {
+            background-color: var(--color-gray-700);
+        }
     }
-  }
-
-  /* Dark mode adjustments */
-  @media (prefers-color-scheme: dark) {
-    .button-secondary:active:not(:disabled) {
-      background-color: var(--color-gray-700);
-    }
-  }
 }

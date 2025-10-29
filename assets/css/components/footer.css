@@ -2,107 +2,105 @@
  * Footer Component
  *
  * Site footer with social media links and copyright.
- * Uses design tokens for consistent styling.
  */
 
 @layer components {
-  /* Footer */
-  .site-footer {
-    background-color: var(--color-white);
-    border-top: 1px solid var(--color-border-subtle);
-  }
-
-  .footer-container {
-    max-width: 80rem; /* ~1280px - matches nav width */
-    margin: 0 auto;
-    padding: var(--space-12) var(--space-6);
-  }
-
-  .footer-content {
-    display: flex;
-    flex-direction: column-reverse;
-    align-items: center;
-    gap: var(--space-8);
-  }
-
-  /* Social media links */
-  .footer-social {
-    display: flex;
-    justify-content: center;
-    gap: var(--space-6);
-  }
-
-  .footer-social-link {
-    color: var(--color-gray-600);
-    transition: color var(--transition-fast);
-
-    &:hover {
-      color: var(--color-gray-800);
-    }
-
-    &:focus-visible {
-      outline: 2px solid var(--color-primary-500);
-      outline-offset: 2px;
-      border-radius: var(--radius-sm);
-    }
-  }
-
-  .footer-icon {
-    width: 1.5rem;
-    height: 1.5rem;
-  }
-
-  /* Copyright text */
-  .footer-copyright {
-    margin: 0;
-    text-align: center;
-    font-size: var(--font-size-sm);
-    line-height: 1.5;
-    color: var(--color-gray-600);
-  }
-
-  /* Responsive breakpoints */
-  @media (min-width: 768px) {
-    .footer-content {
-      flex-direction: row;
-      justify-content: space-between;
-      gap: 0;
-    }
-
-    .footer-social {
-      order: 2;
-    }
-
-    .footer-copyright {
-      order: 1;
-      margin: 0;
-      text-align: left;
-    }
-  }
-
-  @media (min-width: 1024px) {
-    .footer-container {
-      padding: var(--space-12) var(--space-8);
-    }
-  }
-
-  /* Dark mode adjustments */
-  @media (prefers-color-scheme: dark) {
     .site-footer {
-      background-color: var(--color-gray-900);
-      border-top-color: var(--color-gray-800);
+        background-color: var(--color-white);
+        border-top: 1px solid var(--color-border-subtle);
+    }
+
+    .footer-container {
+        max-width: 80rem; /* ~1280px - matches nav width */
+        margin: 0 auto;
+        padding: var(--space-12) var(--space-6);
+    }
+
+    .footer-content {
+        display: flex;
+        flex-direction: column-reverse;
+        align-items: center;
+        gap: var(--space-8);
+    }
+
+    /* Social media links */
+    .footer-social {
+        display: flex;
+        justify-content: center;
+        gap: var(--space-6);
     }
 
     .footer-social-link {
-      color: var(--color-gray-400);
+        color: var(--color-gray-600);
+        transition: color var(--transition-fast);
 
-      &:hover {
-        color: var(--color-white);
-      }
+        &:hover {
+            color: var(--color-gray-800);
+        }
+
+        &:focus-visible {
+            outline: 2px solid var(--color-primary-500);
+            outline-offset: 2px;
+            border-radius: var(--radius-sm);
+        }
     }
 
+    .footer-icon {
+        width: 1.5rem;
+        height: 1.5rem;
+    }
+
+    /* Copyright text */
     .footer-copyright {
-      color: var(--color-gray-400);
+        margin: 0;
+        text-align: center;
+        font-size: var(--font-size-sm);
+        line-height: 1.5;
+        color: var(--color-gray-600);
     }
-  }
+
+    /* Responsive breakpoints */
+    @media (min-width: 768px) {
+        .footer-content {
+            flex-direction: row;
+            justify-content: space-between;
+            gap: 0;
+        }
+
+        .footer-social {
+            order: 2;
+        }
+
+        .footer-copyright {
+            order: 1;
+            margin: 0;
+            text-align: left;
+        }
+    }
+
+    @media (min-width: 1024px) {
+        .footer-container {
+            padding: var(--space-12) var(--space-8);
+        }
+    }
+
+    /* Dark mode adjustments */
+    @media (prefers-color-scheme: dark) {
+        .site-footer {
+            background-color: var(--color-gray-900);
+            border-top-color: var(--color-gray-800);
+        }
+
+        .footer-social-link {
+            color: var(--color-gray-400);
+
+            &:hover {
+                color: var(--color-white);
+            }
+        }
+
+        .footer-copyright {
+            color: var(--color-gray-400);
+        }
+    }
 }

@@ -1,30 +1,25 @@
 <Layouts.app flash={@flash} current_scope={@current_scope}>
-  <.header>
-    Listing Posts
-    <:actions>
-      <.button href={~p"/posts/new"}>
-        New Post
-      </.button>
-    </:actions>
-  </.header>
+  <div class="blog-section">
+    <div class="blog-section-bg">
+      <div class="blog-section-bg-top"></div>
+    </div>
 
-  <.table id="posts" rows={@posts}>
-    <:col :let={post} label="Title">{post.title}</:col>
-    <:col :let={post} label="Slug">{post.slug}</:col>
-    <:col :let={post} label="Description">{post.description}</:col>
-    <:col :let={post} label="Body">{post.body}</:col>
-    <:col :let={post} label="Published at">{post.published_at}</:col>
-    <:col :let={post} label="Draft">{post.draft}</:col>
-    <:action :let={post}>
-      <div class="sr-only">
-        <.link navigate={~p"/posts/#{post}"}>Show</.link>
-      </div>
-      <.link navigate={~p"/posts/#{post}/edit"}>Edit</.link>
-    </:action>
-    <:action :let={post}>
-      <.link href={~p"/posts/#{post}"} method="delete" data-confirm="Are you sure?">
-        Delete
-      </.link>
-    </:action>
-  </.table>
+    <div class="blog-container">
+      <.blog_header>
+        <:title>
+          Latest Posts
+          <%= if @current_scope do %>
+            <.link href={~p"/posts/new"} class="button button-primary" style="margin-left: 1rem; font-size: 1rem;">
+              New Post
+            </.link>
+          <% end %>
+        </:title>
+        <:description>
+          Explore our latest articles, tutorials, and insights on web development and technology.
+        </:description>
+      </.blog_header>
+
+      <.blog_grid posts={@posts} />
+    </div>
+  </div>
 </Layouts.app>
