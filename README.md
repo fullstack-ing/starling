@@ -1,4 +1,4 @@
-# Starling 🐦‍⬛
+# Starling
 
 A more frontend agnostic Elixir Phoenix (Currently WIP) that goes with the flow.
 
