@@ -6,7 +6,7 @@ A more frontend agnostic Elixir Phoenix (Currently WIP)
 
 * Phoenix generators push too many opinions. (phx.gen.html / phx.gen.live)
 * Daisy UI does not do enough to justify being added in addition to tailwind.
-* Tailwind is overkill and makes your dom a mess with annnotions.
+* Tailwind is overkill and makes your dom a mess with annotations.
 * Tailwind is over compensation for not wanting to use basic css standards.
 * Liveview's trade offs create more complexity than they provide meaningful features most of the time.
 * Liveview is over compensation for not wanting to use web components.
