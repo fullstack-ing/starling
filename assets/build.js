@@ -1,11 +1,10 @@
 import * as esbuild from "esbuild";
-// what is transform used for?
-import { transform, bundleAsync } from "lightningcss";
+
+import { bundleAsync } from "lightningcss";
 import { fileURLToPath } from "url";
 import { dirname, resolve } from "path";
 
-// what is readFileSync used for?
-import { readFileSync, writeFileSync, watch as fsWatch } from "fs";
+import { writeFileSync, watch as fsWatch } from "fs";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
