@@ -33,10 +33,14 @@
 /* Utility patterns for composition */
 @import "./utilities/layout.css";
 @import "./utilities/patterns.css";
+@import "./utilities/animations.css";
 
 /* Components */
 @import "./components/flash.css";
 @import "./components/buttons.css";
-/* @import "./components/navigation.css"; */
-/* @import "./components/forms.css"; */
-/* @import "./components/tables.css"; */
+@import "./components/forms.css";
+@import "./components/layout.css";
+@import "./components/tables.css";
+@import "./components/icons.css";
+@import "./components/navigation.css";
+@import "./components/footer.css";

@@ -8,7 +8,7 @@
     </:actions>
   </.header>
 
-  <.table id="posts" rows={@posts} row_click={&JS.navigate(~p"/posts/#{&1}")}>
+  <.table id="posts" rows={@posts}>
     <:col :let={post} label="Title">{post.title}</:col>
     <:col :let={post} label="Slug">{post.slug}</:col>
     <:col :let={post} label="Description">{post.description}</:col>

@@ -38,6 +38,7 @@
 
     /* Z-index scale */
     --z-base: 0;
+    --z-header: 1000;
     --z-dropdown: 1000;
     --z-sticky: 1100;
     --z-fixed: 1200;
@@ -45,6 +46,7 @@
     --z-modal: 1400;
     --z-popover: 1500;
     --z-tooltip: 1600;
+    --z-toast: 1500;
 
     /* Container widths */
     --container-sm: 640px;

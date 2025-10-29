@@ -24,8 +24,6 @@ defmodule StarlingWeb.CoreComponents do
   use Phoenix.Component
   use Gettext, backend: StarlingWeb.Gettext
 
-  alias Phoenix.LiveView.JS
-
   # Delegate web components from separate modules
   defdelegate flash(assigns), to: StarlingWeb.FlashComponent
 
@@ -339,47 +337,6 @@ defmodule StarlingWeb.CoreComponents do
       </div>
     </dl>
     """
-  end
-
-  @doc """
-  Renders an icon.
-
-  This is a placeholder component. Replace with your preferred icon system:
-  - SVG sprites
-  - Icon fonts
-  - Inline SVG components
-  - Web components
-
-  ## Examples
-
-      <.icon name="x-mark" />
-      <.icon name="check" class="icon-lg" />
-  """
-  attr :name, :string, required: true
-  attr :class, :string, default: nil
-
-  def icon(assigns) do
-    ~H"""
-    <span class={["icon", "icon-#{@name}", @class]} aria-hidden="true"></span>
-    """
-  end
-
-  ## JS Commands
-
-  def show(js \\ %JS{}, selector) do
-    JS.show(js,
-      to: selector,
-      time: 300,
-      transition: {"transition-show", "transition-show-from", "transition-show-to"}
-    )
-  end
-
-  def hide(js \\ %JS{}, selector) do
-    JS.hide(js,
-      to: selector,
-      time: 200,
-      transition: {"transition-hide", "transition-hide-from", "transition-hide-to"}
-    )
   end
 
   @doc """

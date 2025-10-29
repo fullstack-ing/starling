@@ -9,7 +9,6 @@
       for={@form}
       id="confirmation_form"
       action={~p"/users/log-in?_action=confirmed"}
-      phx-mounted={JS.focus_first()}
     >
       <input type="hidden" name={@form[:token].name} value={@form[:token].value} />
       <.button
@@ -30,7 +29,6 @@
       for={@form}
       id="login_form"
       action={~p"/users/log-in"}
-      phx-mounted={JS.focus_first()}
     >
       <input type="hidden" name={@form[:token].name} value={@form[:token].value} />
       <%= if @current_scope do %>

@@ -88,7 +88,6 @@ defmodule StarlingWeb do
       import StarlingWeb.CoreComponents
 
       # Common modules used in templates
-      alias Phoenix.LiveView.JS
       alias StarlingWeb.Layouts
 
       # Routes generation with the ~p sigil

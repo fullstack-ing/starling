@@ -1,0 +1,119 @@
+/**
+ * Layout Components
+ *
+ * Page-level layout components like headers.
+ * These are NOT web components - just semantic classes.
+ */
+
+@layer components {
+  /* Page header */
+  .page-header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    margin-bottom: var(--space-8);
+    padding-bottom: var(--space-4);
+    border-bottom: 1px solid var(--color-border-subtle);
+  }
+
+  .page-header-with-actions {
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+
+  .page-header-content {
+    flex: 1;
+    min-width: 0; /* Allow text truncation */
+  }
+
+  .page-title {
+    margin: 0;
+    font-size: var(--font-size-3xl);
+    font-weight: var(--font-weight-bold);
+    line-height: var(--line-height-tight);
+    color: var(--color-text-primary);
+  }
+
+  .page-subtitle {
+    margin: var(--space-2) 0 0 0;
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-normal);
+    color: var(--color-text-secondary);
+  }
+
+  .page-header-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    flex-shrink: 0;
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 640px) {
+    .page-header-with-actions {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .page-title {
+      font-size: var(--font-size-2xl);
+    }
+
+    .page-header-actions {
+      justify-content: flex-end;
+    }
+  }
+
+  /* Data list (definition list) */
+  .data-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    margin: 0;
+  }
+
+  .data-list-item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    padding: var(--space-4);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-md);
+    background-color: var(--color-surface-primary);
+  }
+
+  .data-list-title {
+    margin: 0;
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .data-list-value {
+    margin: 0;
+    font-size: var(--font-size-base);
+    color: var(--color-text-primary);
+    line-height: var(--line-height-normal);
+  }
+
+  /* Alternative horizontal layout */
+  @media (min-width: 640px) {
+    .data-list-item {
+      flex-direction: row;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: var(--space-4);
+    }
+
+    .data-list-title {
+      flex-shrink: 0;
+    }
+
+    .data-list-value {
+      text-align: right;
+    }
+  }
+}
