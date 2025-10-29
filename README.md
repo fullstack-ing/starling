@@ -33,5 +33,5 @@ At the moment this project is nothing more than an example of what such a end re
 * Build generators that embrace web components vs trying to replace them with their own noval approch.
 
 I'm doing this sololy from a selfish standpoint and these opinions are my own.
-I'm doing this to tell you that you are wrong for wanting Tailwind / Liveview.
+I'm not doing this to tell you that you are wrong for wanting Tailwind / Liveview.
 Instead I'm saying that I gave it an honest try and really wanted to love it, but sadly it never fully clicked for me.
