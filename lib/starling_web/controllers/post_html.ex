@@ -51,10 +51,16 @@ defmodule StarlingWeb.PostHTML do
       />
   """
   attr :post, :map, required: true
-  attr :image_url, :string, default: "https://images.unsplash.com/photo-1496128858413-b36217c2ce36?w=800&q=80"
+
+  attr :image_url, :string,
+    default: "https://images.unsplash.com/photo-1496128858413-b36217c2ce36?w=800&q=80"
+
   attr :category, :string, default: "Article"
   attr :author_name, :string, default: "Anonymous"
-  attr :author_avatar, :string, default: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=256&q=80"
+
+  attr :author_avatar, :string,
+    default: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=256&q=80"
+
   attr :read_time, :string, default: nil
 
   def blog_card(assigns) do
@@ -73,7 +79,9 @@ defmodule StarlingWeb.PostHTML do
     ~H"""
     <div class="blog-card">
       <div class="blog-card-image-wrapper">
-        <img src={@image_url} alt="" class="blog-card-image" />
+        <.link navigate={~p"/posts/#{@post}"} class="blog-card-image">
+          <img src={@image_url} alt="" class="blog-card-image" />
+        </.link>
       </div>
       <div class="blog-card-content">
         <div class="blog-card-body">

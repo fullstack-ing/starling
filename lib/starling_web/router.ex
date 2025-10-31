@@ -21,15 +21,26 @@ defmodule StarlingWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :home
+  end
 
-    get "/posts", PostController, :index
+  # Admin-only post routes (must come before public routes for /posts/:id)
+  scope "/", StarlingWeb do
+    pipe_through [:browser, :require_admin]
+
     get "/posts/new", PostController, :new
     post "/posts", PostController, :create
-    get "/posts/:id", PostController, :show
     get "/posts/:id/edit", PostController, :edit
     put "/posts/:id", PostController, :update
     patch "/posts/:id", PostController, :update
     delete "/posts/:id", PostController, :delete
+  end
+
+  # Public post routes (dynamic :id routes come last)
+  scope "/", StarlingWeb do
+    pipe_through :browser
+
+    get "/posts", PostController, :index
+    get "/posts/:id", PostController, :show
   end
 
   # Other scopes may use custom stacks.

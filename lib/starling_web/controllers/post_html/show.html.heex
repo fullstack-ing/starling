@@ -1,23 +1,32 @@
 <Layouts.app flash={@flash} current_scope={@current_scope}>
+  <:admin_bar>
+    <span class={["admin-bar-badge", if(@post.draft, do: "admin-bar-badge-draft", else: "admin-bar-badge-published")]}>
+      <%= if @post.draft, do: "Draft", else: "Published" %>
+    </span>
+    <.button navigate={~p"/posts/#{@post}/edit?return_to=show"}>
+      Edit Post
+    </.button>
+    <.link
+      href={~p"/posts/#{@post}"}
+      method="delete"
+      data-confirm="Are you sure you want to delete this post?"
+      class="button button-secondary"
+    >
+      Delete
+    </.link>
+    <.button navigate={~p"/posts"} class="button-secondary">
+      Back to Posts
+    </.button>
+  </:admin_bar>
+
   <.header>
-    Post {@post.id}
-    <:subtitle>This is a post record from your database.</:subtitle>
-    <:actions>
-      <.button navigate={~p"/posts"}>
-        ← Back
-      </.button>
-      <.button variant="primary" navigate={~p"/posts/#{@post}/edit?return_to=show"}>
-        Edit post
-      </.button>
-    </:actions>
+    {@post.title}
+    <:subtitle>
+      <p>
+        Published: {@post.published_at}
+      </p>
+    </:subtitle>
   </.header>
 
-  <.list>
-    <:item title="Title">{@post.title}</:item>
-    <:item title="Slug">{@post.slug}</:item>
-    <:item title="Description">{@post.description}</:item>
-    <:item title="Body">{@post.body}</:item>
-    <:item title="Published at">{@post.published_at}</:item>
-    <:item title="Draft">{@post.draft}</:item>
-  </.list>
+  {@post.body}
 </Layouts.app>

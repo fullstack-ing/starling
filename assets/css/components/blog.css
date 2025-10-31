@@ -208,7 +208,7 @@
 
     @media (min-width: 640px) {
         .blog-section {
-            padding-top: var(--space-24);
+            padding: var(--space-24) 0 0;
         }
 
         .blog-title {
@@ -225,11 +225,6 @@
     }
 
     @media (min-width: 1024px) {
-        .blog-section {
-            padding-left: var(--space-8);
-            padding-right: var(--space-8);
-        }
-
         .blog-grid {
             max-width: none;
             grid-template-columns: repeat(3, 1fr);

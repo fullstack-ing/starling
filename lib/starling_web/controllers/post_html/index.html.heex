@@ -1,24 +1,17 @@
 <Layouts.app flash={@flash} current_scope={@current_scope}>
+  <:admin_bar>
+    <.button navigate={~p"/posts/new"}>
+      New Post
+    </.button>
+  </:admin_bar>
   <div class="blog-section">
-    <div class="blog-section-bg">
-      <div class="blog-section-bg-top"></div>
-    </div>
-
     <div class="blog-container">
       <.blog_header>
-        <:title>
-          Latest Posts
-          <%= if @current_scope do %>
-            <.link href={~p"/posts/new"} class="button button-primary" style="margin-left: 1rem; font-size: 1rem;">
-              New Post
-            </.link>
-          <% end %>
-        </:title>
+        <:title>Latest Posts</:title>
         <:description>
           Explore our latest articles, tutorials, and insights on web development and technology.
         </:description>
       </.blog_header>
-
       <.blog_grid posts={@posts} />
     </div>
   </div>

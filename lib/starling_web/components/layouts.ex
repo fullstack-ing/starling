@@ -32,6 +32,7 @@ defmodule StarlingWeb.Layouts do
     doc: "the current [scope](https://hexdocs.pm/phoenix/scopes.html)"
 
   slot :inner_block, required: true
+  slot :admin_bar
 
   def app(assigns) do
     ~H"""
@@ -187,6 +188,32 @@ defmodule StarlingWeb.Layouts do
           </div>
         </el-disclosure>
       </nav>
+      <%= if @current_scope && @current_scope.user && @current_scope.user.admin && @admin_bar != [] do %>
+        <div class="admin-bar">
+          <div class="admin-bar-container">
+            <div class="admin-bar-content">
+              <div class="admin-bar-label">
+                <svg
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  aria-hidden="true"
+                  class="admin-bar-icon"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+                <span>Admin Mode</span>
+              </div>
+              <div class="admin-bar-actions">
+                {render_slot(@admin_bar)}
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
     </header>
 
     <main class="main-content">
