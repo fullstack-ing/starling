@@ -6,109 +6,128 @@
  */
 
 @layer components {
-  /* Admin bar container */
-  .admin-bar {
-    position: sticky;
-    top: 4rem; /* Below the nav header */
-    z-index: calc(var(--z-header, 1000) - 10); /* Below nav but above content */
-    background-color: var(--color-primary-50);
-    border-bottom: 1px solid var(--color-primary-200);
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
-  }
-
-  .admin-bar-container {
-    max-width: 80rem; /* ~1280px - matches nav width */
-    margin: 0 auto;
-    padding: var(--space-3) var(--space-6);
-  }
-
-  .admin-bar-content {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--space-4);
-  }
-
-  /* Admin bar left section (label/info) */
-  .admin-bar-label {
-    display: flex;
-    align-items: center;
-    gap: var(--space-2);
-    font-size: var(--font-size-sm);
-    font-weight: var(--font-weight-medium);
-    color: var(--color-primary-700);
-  }
-
-  .admin-bar-icon {
-    width: 1.25rem;
-    height: 1.25rem;
-  }
-
-  /* Admin bar actions (right section) */
-  .admin-bar-actions {
-    display: flex;
-    align-items: center;
-    gap: var(--space-2);
-    flex-wrap: wrap;
-  }
-
-  /* Status badge in admin bar */
-  .admin-bar-badge {
-    display: inline-flex;
-    align-items: center;
-    padding: var(--space-1) var(--space-3);
-    border-radius: var(--radius-full);
-    font-size: var(--font-size-sm);
-    font-weight: var(--font-weight-medium);
-  }
-
-  .admin-bar-badge-draft {
-    background-color: var(--color-gray-200);
-    color: var(--color-gray-700);
-  }
-
-  .admin-bar-badge-published {
-    background-color: var(--color-success);
-    color: var(--color-white);
-  }
-
-  /* Responsive adjustments */
-  @media (max-width: 640px) {
-    .admin-bar-content {
-      flex-direction: column;
-      align-items: stretch;
-      gap: var(--space-3);
-    }
-
-    .admin-bar-label {
-      justify-content: center;
-    }
-
-    .admin-bar-actions {
-      justify-content: center;
-    }
-  }
-
-  @media (min-width: 1024px) {
-    .admin-bar-container {
-      padding: var(--space-3) var(--space-8);
-    }
-  }
-
-  /* Dark mode adjustments */
-  @media (prefers-color-scheme: dark) {
+    /* Admin bar container */
     .admin-bar {
-      background-color: var(--color-primary-900);
-      border-bottom-color: var(--color-primary-800);
+        position: sticky;
+        top: 4rem; /* Below the nav header */
+        z-index: calc(
+            var(--z-header, 1000) - 10
+        ); /* Below nav but above content */
+        background-color: var(--color-gray-50);
+        border-bottom: 1px solid var(--color-primary-200);
+        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
     }
 
+    .admin-bar-container {
+        max-width: 80rem; /* ~1280px - matches nav width */
+        margin: 0 auto;
+        padding: var(--space-3) var(--space-6);
+    }
+
+    .admin-bar-content {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--space-4);
+    }
+
+    /* Admin bar left section (label/info) */
     .admin-bar-label {
-      color: var(--color-primary-200);
+        display: flex;
+        align-items: center;
+        gap: var(--space-2);
+        font-size: var(--font-size-sm);
+        font-weight: var(--font-weight-medium);
+        color: var(--color-primary-700);
+    }
+
+    .admin-bar-icon {
+        width: 1.25rem;
+        height: 1.25rem;
+    }
+
+    /* Admin bar actions (right section) */
+    .admin-bar-actions {
+        display: flex;
+        align-items: center;
+        gap: var(--space-2);
+        flex-wrap: wrap;
+    }
+
+    /* Status badge in admin bar */
+    .admin-bar-badge {
+        display: inline-flex;
+        align-items: center;
+        padding: var(--space-1) var(--space-3);
+        border-radius: var(--radius-full);
+        font-size: var(--font-size-sm);
+        font-weight: var(--font-weight-medium);
     }
 
     .admin-bar-badge-draft {
-      background-color: var(--color-gray-700);
-      color: var(--color-gray-200);
+        background-color: var(--color-gray-200);
+        color: var(--color-gray-700);
     }
-  }
+
+    .admin-bar-badge-published {
+        background-color: var(--color-success);
+        color: var(--color-white);
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 640px) {
+        .admin-bar-content {
+            flex-direction: column;
+            align-items: stretch;
+            gap: var(--space-3);
+        }
+
+        .admin-bar-label {
+            justify-content: center;
+        }
+
+        .admin-bar-actions {
+            justify-content: center;
+        }
+    }
+
+    @media (min-width: 1024px) {
+        .admin-bar-container {
+            padding: var(--space-3) var(--space-8);
+        }
+    }
+
+    /* Dark mode adjustments */
+    @media (prefers-color-scheme: dark) {
+        :root:not([data-theme="light"]) .admin-bar {
+            background-color: var(--color-gray-700);
+            border-bottom-color: var(--color-primary-800);
+        }
+
+        :root:not([data-theme="light"]) .admin-bar-label {
+            color: var(--color-primary-200);
+        }
+
+        :root:not([data-theme="light"]) .admin-bar-badge-draft {
+            background-color: var(--color-gray-700);
+            color: var(--color-gray-200);
+        }
+    }
+
+    /* Force dark mode */
+    :root[data-theme="dark"] {
+        .admin-bar {
+            background-color: var(--color-gray-700);
+            border-bottom-color: var(--color-primary-800);
+        }
+
+        .admin-bar-label {
+            color: var(--color-primary-200);
+        }
+
+        .admin-bar-badge-draft {
+            background-color: var(--color-gray-700);
+            color: var(--color-gray-200);
+        }
+    }
 }

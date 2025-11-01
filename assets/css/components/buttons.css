@@ -65,24 +65,56 @@
     }
 
     .button-secondary {
-        background-color: var(--color-surface-secondary);
+        background-color: var(--color-white);
         color: var(--color-text-primary);
-        border-color: var(--color-border-medium);
+        border-color: var(--color-gray-300);
 
         &:hover:not(:disabled) {
-            background-color: var(--color-surface-tertiary);
-            border-color: var(--color-border-strong);
+            background-color: var(--color-gray-50);
+            border-color: var(--color-gray-400);
         }
 
         &:active:not(:disabled) {
-            background-color: var(--color-gray-200);
-            border-color: var(--color-border-strong);
+            background-color: var(--color-gray-100);
+            border-color: var(--color-gray-500);
         }
     }
 
+    /* Dark mode adjustments */
     @media (prefers-color-scheme: dark) {
-        .button-secondary:active:not(:disabled) {
-            background-color: var(--color-gray-700);
+        :root:not([data-theme="light"]) .button-secondary {
+            background-color: var(--color-gray-800);
+            border-color: var(--color-gray-700);
+            color: var(--color-gray-100);
+
+            &:hover:not(:disabled) {
+                background-color: var(--color-gray-700);
+                border-color: var(--color-gray-600);
+            }
+
+            &:active:not(:disabled) {
+                background-color: var(--color-gray-600);
+                border-color: var(--color-gray-500);
+            }
+        }
+    }
+
+    /* Force dark mode */
+    :root[data-theme="dark"] {
+        .button-secondary {
+            background-color: var(--color-gray-800);
+            border-color: var(--color-gray-700);
+            color: var(--color-gray-100);
+
+            &:hover:not(:disabled) {
+                background-color: var(--color-gray-700);
+                border-color: var(--color-gray-600);
+            }
+
+            &:active:not(:disabled) {
+                background-color: var(--color-gray-600);
+                border-color: var(--color-gray-500);
+            }
         }
     }
 }

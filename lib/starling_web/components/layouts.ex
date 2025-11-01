@@ -97,6 +97,7 @@ defmodule StarlingWeb.Layouts do
               </div>
             </div>
             <div class="nav-right">
+              <theme-toggle></theme-toggle>
               <%= if @current_scope do %>
                 <button type="button" class="nav-notification">
                   <span class="nav-notification-inset"></span>
@@ -157,6 +158,10 @@ defmodule StarlingWeb.Layouts do
 
         <el-disclosure id="mobile-menu" hidden class="nav-mobile-menu">
           <div class="nav-mobile-content">
+            <div class="nav-mobile-theme">
+              <span class="nav-mobile-theme-label">Theme</span>
+              <theme-toggle></theme-toggle>
+            </div>
             <%= if @current_scope do %>
               <.link href={~p"/"} class="nav-mobile-link nav-mobile-link-active" aria-current="page">
                 Home

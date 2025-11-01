@@ -124,6 +124,48 @@
     }
 
     @media (prefers-color-scheme: dark) {
+        :root:not([data-theme="light"]) flash-message {
+            background-color: var(--color-gray-800);
+            border-color: var(--color-gray-700);
+        }
+
+        :root:not([data-theme="light"]) flash-message[data-kind="info"] {
+            background-color: var(--color-gray-800);
+            border-left-color: var(--color-primary-400);
+            border-color: var(--color-gray-700);
+        }
+
+        :root:not([data-theme="light"]) flash-message[data-kind="error"] {
+            background-color: var(--color-gray-800);
+            border-left-color: var(--color-error-400);
+            border-color: var(--color-gray-700);
+        }
+
+        :root:not([data-theme="light"]) flash-message .flash-icon,
+        :root:not([data-theme="light"]) flash-message .flash-title,
+        :root:not([data-theme="light"]) flash-message .flash-message {
+            color: var(--color-gray-100);
+        }
+
+        :root:not([data-theme="light"]) flash-message[data-kind="info"] .flash-icon {
+            color: var(--color-primary-400);
+        }
+
+        :root:not([data-theme="light"]) flash-message[data-kind="error"] .flash-icon {
+            color: var(--color-error-400);
+        }
+
+        :root:not([data-theme="light"]) flash-message .flash-close {
+            color: var(--color-gray-400);
+
+            &:hover {
+                color: var(--color-gray-100);
+            }
+        }
+    }
+
+    /* Force dark mode */
+    :root[data-theme="dark"] {
         flash-message {
             background-color: var(--color-gray-800);
             border-color: var(--color-gray-700);

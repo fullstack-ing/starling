@@ -104,9 +104,7 @@ defmodule StarlingWeb.PostHTML do
             </a>
           </div>
           <div class="blog-card-author-info">
-            <p>
-              <a href="#" class="blog-card-author-name">{@author_name}</a>
-            </p>
+            <a href="#" class="blog-card-author-name">{@author_name}</a>
             <div class="blog-card-meta">
               <time datetime={@post.published_at}>
                 {Calendar.strftime(@post.published_at, "%b %d, %Y")}

@@ -8,7 +8,6 @@
 @layer components {
     .blog-section {
         position: relative;
-        padding: var(--space-16) var(--space-6) var(--space-20);
     }
 
     .blog-section::before {
@@ -232,6 +231,58 @@
     }
 
     @media (prefers-color-scheme: dark) {
+        :root:not([data-theme="light"]) .blog-section-bg-top {
+            background-color: var(--color-gray-900);
+        }
+
+        :root:not([data-theme="light"]) .blog-title {
+            color: var(--color-gray-100);
+        }
+
+        :root:not([data-theme="light"]) .blog-description {
+            color: var(--color-gray-400);
+        }
+
+        :root:not([data-theme="light"]) .blog-card {
+            background-color: var(--color-gray-900);
+        }
+
+        :root:not([data-theme="light"]) .blog-card-content {
+            background-color: var(--color-gray-800);
+        }
+
+        :root:not([data-theme="light"]) .blog-card-category {
+            color: var(--color-primary-400);
+        }
+
+        :root:not([data-theme="light"]) .blog-card-title {
+            color: var(--color-gray-100);
+        }
+
+        :root:not([data-theme="light"]) .blog-card-title-link:hover .blog-card-title {
+            color: var(--color-primary-400);
+        }
+
+        :root:not([data-theme="light"]) .blog-card-description {
+            color: var(--color-gray-400);
+        }
+
+        :root:not([data-theme="light"]) .blog-card-author-name {
+            color: var(--color-gray-100);
+        }
+
+        :root:not([data-theme="light"]) .blog-card-meta {
+            color: var(--color-gray-400);
+        }
+
+        :root:not([data-theme="light"]) .blog-card-draft-badge {
+            background-color: var(--color-gray-700);
+            color: var(--color-gray-300);
+        }
+    }
+
+    /* Force dark mode */
+    :root[data-theme="dark"] {
         .blog-section-bg-top {
             background-color: var(--color-gray-900);
         }

@@ -24,6 +24,7 @@ import "phoenix_html";
 import "./components/flash-message.js";
 import "./components/dropdown.js";
 import "./components/disclosure.js";
+import "./theme_toggle.js";
 
 // Establish Phoenix Socket and LiveView configuration.
 // import { Socket } from "phoenix";

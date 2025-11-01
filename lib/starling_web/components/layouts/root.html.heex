@@ -21,12 +21,26 @@
             document.documentElement.setAttribute("data-theme", theme);
           }
         };
+
+        // Initialize theme on page load
         if (!document.documentElement.hasAttribute("data-theme")) {
           setTheme(localStorage.getItem("phx:theme") || "system");
         }
-        window.addEventListener("storage", (e) => e.key === "phx:theme" && setTheme(e.newValue || "system"));
 
-        window.addEventListener("phx:set-theme", (e) => setTheme(e.target.dataset.phxTheme));
+        // Listen for storage changes from other tabs/windows
+        window.addEventListener("storage", (e) => {
+          if (e.key === "phx:theme") {
+            setTheme(e.newValue || "system");
+          }
+        });
+
+        // Listen for theme toggle from web component or other sources
+        window.addEventListener("phx:set-theme", (e) => {
+          const theme = e.detail?.theme || e.target?.dataset?.phxTheme;
+          if (theme) {
+            setTheme(theme);
+          }
+        });
       })();
     </script>
   </head>

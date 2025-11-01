@@ -84,8 +84,28 @@
         }
     }
 
-    /* Dark mode adjustments */
+    /* Dark mode adjustments when system preference is dark (can be overridden) */
     @media (prefers-color-scheme: dark) {
+        :root:not([data-theme="light"]) .site-footer {
+            background-color: var(--color-gray-900);
+            border-top-color: var(--color-gray-800);
+        }
+
+        :root:not([data-theme="light"]) .footer-social-link {
+            color: var(--color-gray-400);
+
+            &:hover {
+                color: var(--color-white);
+            }
+        }
+
+        :root:not([data-theme="light"]) .footer-copyright {
+            color: var(--color-gray-400);
+        }
+    }
+
+    /* Force dark mode (overrides system preference) */
+    :root[data-theme="dark"] {
         .site-footer {
             background-color: var(--color-gray-900);
             border-top-color: var(--color-gray-800);
