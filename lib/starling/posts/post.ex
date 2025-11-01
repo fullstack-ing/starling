@@ -20,7 +20,15 @@ defmodule Starling.Posts.Post do
   def changeset(post, attrs, user_scope) do
     post
     |> cast(attrs, [:title, :slug, :description, :body, :published_at, :draft])
-    |> validate_required([:title, :slug, :description, :body, :published_at, :draft])
+    |> validate_required([:title, :slug, :description, :body, :published_at])
+    |> validate_length(:title, min: 3, max: 255)
+    |> validate_length(:slug, min: 3, max: 255)
+    |> validate_format(:slug, ~r/^[a-z0-9-]+$/,
+      message: "must be lowercase letters, numbers, and hyphens only"
+    )
+    |> validate_length(:description, min: 10, max: 500)
+    |> validate_length(:body, min: 10)
+    |> unique_constraint(:slug)
     |> put_change(:user_id, user_scope.user.id)
   end
 end

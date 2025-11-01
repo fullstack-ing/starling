@@ -24,6 +24,8 @@ defmodule StarlingWeb.CoreComponents do
   use Phoenix.Component
   use Gettext, backend: StarlingWeb.Gettext
 
+  alias StarlingWeb.ValidationAttributes
+
   # Delegate web components from separate modules
   defdelegate flash(assigns), to: StarlingWeb.FlashComponent
 
@@ -110,6 +112,7 @@ defmodule StarlingWeb.CoreComponents do
   attr :multiple, :boolean, default: false, doc: "the multiple flag for select inputs"
   attr :class, :string, default: nil, doc: "the input class to use over defaults"
   attr :error_class, :string, default: nil, doc: "the input error class to use over defaults"
+  attr :hint, :string, default: nil, doc: "helper text to display below the input describing validation requirements"
 
   attr :rest, :global,
     include: ~w(accept autocomplete capture cols disabled form list max maxlength min minlength
@@ -118,11 +121,23 @@ defmodule StarlingWeb.CoreComponents do
   def input(%{field: %Phoenix.HTML.FormField{} = field} = assigns) do
     errors = if Phoenix.Component.used_input?(field), do: field.errors, else: []
 
+    # Extract validation attributes from the changeset
+    validation_attrs = extract_validation_attrs(field)
+
+    # Merge validation attributes with existing :rest, with :rest taking precedence
+    rest = Map.get(assigns, :rest, %{})
+    merged_rest = ValidationAttributes.merge_attrs(validation_attrs, rest)
+
+    # Convert to keyword list and normalize boolean attributes
+    merged_rest = normalize_rest_attrs(merged_rest)
+
     assigns
     |> assign(field: nil, id: assigns.id || field.id)
     |> assign(:errors, Enum.map(errors, &translate_error(&1)))
     |> assign_new(:name, fn -> if assigns.multiple, do: field.name <> "[]", else: field.name end)
     |> assign_new(:value, fn -> field.value end)
+    |> assign(:rest, merged_rest)
+    |> assign_new(:validation_hint, fn -> generate_validation_hint(merged_rest, assigns[:hint]) end)
     |> input()
   end
 
@@ -174,10 +189,15 @@ defmodule StarlingWeb.CoreComponents do
   end
 
   def input(%{type: "textarea"} = assigns) do
+    assigns = assign_new(assigns, :validation_hint, fn -> generate_validation_hint(assigns[:rest] || %{}, assigns[:hint]) end)
+
     ~H"""
     <div class="form-field">
       <label>
-        <span :if={@label} class="form-label">{@label}</span>
+        <span :if={@label} class="form-label">
+          {@label}
+          <span :if={is_required?(@rest)} class="form-required-marker" aria-label="required">*</span>
+        </span>
         <textarea
           id={@id}
           name={@name}
@@ -188,6 +208,7 @@ defmodule StarlingWeb.CoreComponents do
           {@rest}
         >{Phoenix.HTML.Form.normalize_value("textarea", @value)}</textarea>
       </label>
+      <.input_hint :if={@validation_hint} hint={@validation_hint} />
       <.error :for={msg <- @errors}>{msg}</.error>
     </div>
     """
@@ -195,10 +216,15 @@ defmodule StarlingWeb.CoreComponents do
 
   # All other inputs text, datetime-local, url, password, etc. are handled here...
   def input(assigns) do
+    assigns = assign_new(assigns, :validation_hint, fn -> generate_validation_hint(assigns[:rest] || %{}, assigns[:hint]) end)
+
     ~H"""
     <div class="form-field">
       <label>
-        <span :if={@label} class="form-label">{@label}</span>
+        <span :if={@label} class="form-label">
+          {@label}
+          <span :if={is_required?(@rest)} class="form-required-marker" aria-label="required">*</span>
+        </span>
         <input
           type={@type}
           name={@name}
@@ -211,10 +237,48 @@ defmodule StarlingWeb.CoreComponents do
           {@rest}
         />
       </label>
+      <.input_hint :if={@validation_hint} hint={@validation_hint} />
       <.error :for={msg <- @errors}>{msg}</.error>
     </div>
     """
   end
+
+  # Normalize rest attributes to ensure boolean attributes render correctly
+  defp normalize_rest_attrs(attrs) when is_map(attrs) do
+    attrs
+    |> Enum.map(fn
+      # Remove boolean attributes that are false
+      {key, false} when key in [:required, :disabled, :readonly, :multiple] -> nil
+      # Keep boolean attributes that are true
+      {key, true} when key in [:required, :disabled, :readonly, :multiple] -> {key, true}
+      # Keep all other attributes as-is
+      {key, value} -> {key, value}
+    end)
+    |> Enum.reject(&is_nil/1)
+  end
+
+  defp normalize_rest_attrs(attrs) when is_list(attrs) do
+    attrs
+    |> Enum.map(fn
+      {key, false} when key in [:required, :disabled, :readonly, :multiple] -> nil
+      {key, true} when key in [:required, :disabled, :readonly, :multiple] -> {key, true}
+      {key, value} -> {key, value}
+    end)
+    |> Enum.reject(&is_nil/1)
+  end
+
+  # Extract validation attributes from a form field's changeset
+  defp extract_validation_attrs(%Phoenix.HTML.FormField{form: form, field: field_name}) do
+    # Always extract validation attributes for client-side validation
+    extract_from_changeset(form.source, field_name)
+  end
+
+  # Extract from changeset if available
+  defp extract_from_changeset(%Ecto.Changeset{} = changeset, field_name) do
+    ValidationAttributes.for_field(changeset, field_name)
+  end
+
+  defp extract_from_changeset(_, _), do: %{}
 
   # Helper used by inputs to generate form errors
   defp error(assigns) do
@@ -225,6 +289,50 @@ defmodule StarlingWeb.CoreComponents do
     </p>
     """
   end
+
+  # Helper used by inputs to display validation hints
+  defp input_hint(assigns) do
+    ~H"""
+    <p class="form-hint">{@hint}</p>
+    """
+  end
+
+  # Check if a field is required based on rest attributes
+  defp is_required?(rest) when is_list(rest), do: Keyword.get(rest, :required, false) == true
+  defp is_required?(rest) when is_map(rest), do: Map.get(rest, :required, false) == true
+  defp is_required?(_), do: false
+
+  # Generate validation hint text from validation attributes
+  defp generate_validation_hint(rest, custom_hint) when is_list(rest) do
+    generate_validation_hint(Map.new(rest), custom_hint)
+  end
+
+  defp generate_validation_hint(rest, custom_hint) when is_map(rest) do
+    hints = []
+
+    # Add custom hint if provided (useful for pattern explanations)
+    hints = if custom_hint, do: [custom_hint | hints], else: hints
+
+    # Add length constraints
+    minlength = Map.get(rest, :minlength)
+    maxlength = Map.get(rest, :maxlength)
+
+    hints = case {minlength, maxlength} do
+      {nil, nil} -> hints
+      {min, nil} -> ["Minimum #{min} characters" | hints]
+      {nil, max} -> ["Maximum #{max} characters" | hints]
+      {min, max} when min == max -> ["Exactly #{min} characters" | hints]
+      {min, max} -> ["#{min}-#{max} characters" | hints]
+    end
+
+    # Join all hints with a separator
+    case hints do
+      [] -> nil
+      _ -> Enum.reverse(hints) |> Enum.join(" • ")
+    end
+  end
+
+  defp generate_validation_hint(_, custom_hint), do: custom_hint
 
   @doc """
   Renders a header with title.

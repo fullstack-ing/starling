@@ -80,6 +80,38 @@
       border-color: var(--color-gray-300);
       cursor: default;
     }
+
+    /* HTML5 validation states */
+    /* Only show invalid state after user has interacted with field */
+    &:invalid:not(:placeholder-shown):not(:focus) {
+      border-color: var(--color-error-400);
+      background-color: var(--color-error-50);
+    }
+
+    &:invalid:focus {
+      border-color: var(--color-error-500);
+      border-width: 2px;
+      padding: calc(var(--space-2) - 0.5px) calc(var(--space-3) - 0.5px);
+      box-shadow: 0 0 0 3px color-mix(in oklch, var(--color-error-500) 20%, transparent);
+    }
+
+    /* Show valid state for fields that have validation rules (required, pattern, etc.) */
+    &:valid:required:not(:placeholder-shown),
+    &:valid[pattern]:not(:placeholder-shown),
+    &:valid[minlength]:not(:placeholder-shown),
+    &:valid[min]:not(:placeholder-shown) {
+      border-color: var(--color-success-500);
+    }
+
+    &:valid:required:focus,
+    &:valid[pattern]:focus,
+    &:valid[minlength]:focus,
+    &:valid[min]:focus {
+      border-color: var(--color-success-500);
+      border-width: 2px;
+      padding: calc(var(--space-2) - 0.5px) calc(var(--space-3) - 0.5px);
+      box-shadow: 0 0 0 3px color-mix(in oklch, var(--color-success-500) 20%, transparent);
+    }
   }
 
   /* Select specific styles */
@@ -102,6 +134,34 @@
     resize: vertical;
     min-height: 6rem;
     font-family: var(--font-sans);
+
+    /* HTML5 validation states for textarea */
+    &:invalid:not(:placeholder-shown):not(:focus) {
+      border-color: var(--color-error-400);
+      background-color: var(--color-error-50);
+    }
+
+    &:invalid:focus {
+      border-color: var(--color-error-500);
+      border-width: 2px;
+      padding: calc(var(--space-2) - 0.5px) calc(var(--space-3) - 0.5px);
+      box-shadow: 0 0 0 3px color-mix(in oklch, var(--color-error-500) 20%, transparent);
+    }
+
+    &:valid:required:not(:placeholder-shown),
+    &:valid[minlength]:not(:placeholder-shown),
+    &:valid[maxlength]:not(:placeholder-shown) {
+      border-color: var(--color-success-500);
+    }
+
+    &:valid:required:focus,
+    &:valid[minlength]:focus,
+    &:valid[maxlength]:focus {
+      border-color: var(--color-success-500);
+      border-width: 2px;
+      padding: calc(var(--space-2) - 0.5px) calc(var(--space-3) - 0.5px);
+      box-shadow: 0 0 0 3px color-mix(in oklch, var(--color-success-500) 20%, transparent);
+    }
   }
 
   /* Checkbox styles */
@@ -226,6 +286,21 @@
     }
   }
 
+  /* Validation hint */
+  .form-hint {
+    margin-top: var(--space-1);
+    font-size: var(--font-size-xs);
+    color: var(--color-text-tertiary);
+    line-height: var(--line-height-tight);
+  }
+
+  /* Required field marker */
+  .form-required-marker {
+    color: var(--color-error-500);
+    font-weight: var(--font-weight-bold);
+    margin-left: var(--space-1);
+  }
+
   /* Dark mode adjustments */
   @media (prefers-color-scheme: dark) {
     .form-input,
@@ -260,6 +335,64 @@
       &[readonly] {
         background-color: color-mix(in oklch, var(--color-gray-800) 50%, var(--color-gray-900) 50%);
         border-color: var(--color-gray-600);
+      }
+
+      /* HTML5 validation states in dark mode */
+      &:invalid:not(:placeholder-shown):not(:focus) {
+        border-color: var(--color-error-500);
+        background-color: color-mix(in oklch, var(--color-error-900) 30%, transparent);
+      }
+
+      &:invalid:focus {
+        border-color: var(--color-error-400);
+        background-color: color-mix(in oklch, var(--color-error-900) 20%, transparent);
+        padding: calc(var(--space-2) - 0.5px) calc(var(--space-3) - 0.5px);
+        box-shadow: 0 0 0 3px color-mix(in oklch, var(--color-error-400) 20%, transparent);
+      }
+
+      &:valid:required:not(:placeholder-shown),
+      &:valid[pattern]:not(:placeholder-shown),
+      &:valid[minlength]:not(:placeholder-shown),
+      &:valid[min]:not(:placeholder-shown) {
+        border-color: var(--color-success-500);
+      }
+
+      &:valid:required:focus,
+      &:valid[pattern]:focus,
+      &:valid[minlength]:focus,
+      &:valid[min]:focus {
+        border-color: var(--color-success-400);
+        padding: calc(var(--space-2) - 0.5px) calc(var(--space-3) - 0.5px);
+        box-shadow: 0 0 0 3px color-mix(in oklch, var(--color-success-400) 20%, transparent);
+      }
+    }
+
+    .form-textarea {
+      /* Dark mode validation states for textarea */
+      &:invalid:not(:placeholder-shown):not(:focus) {
+        border-color: var(--color-error-500);
+        background-color: color-mix(in oklch, var(--color-error-900) 30%, transparent);
+      }
+
+      &:invalid:focus {
+        border-color: var(--color-error-400);
+        background-color: color-mix(in oklch, var(--color-error-900) 20%, transparent);
+        padding: calc(var(--space-2) - 0.5px) calc(var(--space-3) - 0.5px);
+        box-shadow: 0 0 0 3px color-mix(in oklch, var(--color-error-400) 20%, transparent);
+      }
+
+      &:valid:required:not(:placeholder-shown),
+      &:valid[minlength]:not(:placeholder-shown),
+      &:valid[maxlength]:not(:placeholder-shown) {
+        border-color: var(--color-success-500);
+      }
+
+      &:valid:required:focus,
+      &:valid[minlength]:focus,
+      &:valid[maxlength]:focus {
+        border-color: var(--color-success-400);
+        padding: calc(var(--space-2) - 0.5px) calc(var(--space-3) - 0.5px);
+        box-shadow: 0 0 0 3px color-mix(in oklch, var(--color-success-400) 20%, transparent);
       }
     }
 
@@ -328,6 +461,14 @@
     }
 
     .form-error {
+      color: var(--color-error-400);
+    }
+
+    .form-hint {
+      color: var(--color-gray-500);
+    }
+
+    .form-required-marker {
       color: var(--color-error-400);
     }
 

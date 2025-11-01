@@ -1,8 +1,29 @@
 <.form :let={f} for={@changeset} action={@action}>
-  <.input field={f[:title]} type="text" label="Title" />
-  <.input field={f[:slug]} type="text" label="Slug" />
-  <.input field={f[:description]} type="textarea" label="Description" />
-  <.input field={f[:body]} type="textarea" label="Body" />
+  <.input
+    field={f[:title]}
+    type="text"
+    label="Title"
+    placeholder="Enter a catchy title"
+  />
+  <.input
+    field={f[:slug]}
+    type="text"
+    label="Slug"
+    hint="Lowercase letters, numbers, and hyphens only"
+    placeholder="my-post-slug"
+  />
+  <.input
+    field={f[:description]}
+    type="textarea"
+    label="Description"
+    placeholder="A brief summary of your post"
+  />
+  <.input
+    field={f[:body]}
+    type="textarea"
+    label="Body"
+    placeholder="Write your post content here..."
+  />
   <.input field={f[:published_at]} type="date" label="Published at" />
   <.input field={f[:draft]} type="checkbox" label="Draft" />
   <footer>
